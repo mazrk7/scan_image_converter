@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>scan_image_converter</name>
+  <version>0.0.0</version>
+  <description>The scan_image_converter package</description>
+
+  <maintainer email="mark.zolotas12@imperial.ac.uk">Mark Zolotas</maintainer>
+
+  <license>MIT</license>
+
+  <author>Mark Zolotas</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
