@@ -43,6 +43,8 @@ class ScanImageConverter
 
     int size_x_;
     int size_y_;
+
+    bool dilate_;
 };
 
 //==============================================================================
@@ -120,6 +122,7 @@ ScanImageConverter::ScanImageConverter(tf2_ros::Buffer& tf) : tf_buffer_(tf)
   nh_priv.param<std::string>("base_frame", base_frame_, std::string("base_link"));
   nh_priv.param<int>("image_size_x", size_x_, 320);
   nh_priv.param<int>("image_size_y", size_y_, 240);
+  nh_priv.param<bool>("dilate", dilate_, false);
 
   // Topic names
   std::string scan_topic;
@@ -144,8 +147,11 @@ void ScanImageConverter::laserCallback(const sensor_msgs::LaserScanConstPtr& sca
 
   // Dilate and erode white for expanded border dimensions, using a 3x3 kernel
   // Morphological process also closes small holes between scanner readings
-  cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), cv::Point(-1, -1), 2);
-  cv::erode(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), cv::Point(-1, -1), 1);
+  if (dilate_)
+  {
+    cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), cv::Point(-1, -1), 2);
+    cv::erode(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), cv::Point(-1, -1), 1);
+  }
 
   // Publish the converted image
   sensor_msgs::ImagePtr img_msg = cv_bridge::CvImage(scan_msg.header, "mono8", image).toImageMsg();
