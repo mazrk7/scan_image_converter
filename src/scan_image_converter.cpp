@@ -45,6 +45,7 @@ class ScanImageConverter
     int size_y_;
 
     bool dilate_;
+    int kernel_;
 };
 
 //==============================================================================
@@ -123,6 +124,7 @@ ScanImageConverter::ScanImageConverter(tf2_ros::Buffer& tf) : tf_buffer_(tf)
   nh_priv.param<int>("image_size_x", size_x_, 320);
   nh_priv.param<int>("image_size_y", size_y_, 240);
   nh_priv.param<bool>("dilate", dilate_, false);
+  nh_priv.param<int>("kernel_size", kernel_, 3);
 
   // Topic names
   std::string scan_topic;
@@ -149,8 +151,8 @@ void ScanImageConverter::laserCallback(const sensor_msgs::LaserScanConstPtr& sca
   // Morphological process also closes small holes between scanner readings
   if (dilate_)
   {
-    cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), cv::Point(-1, -1), 2);
-    cv::erode(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), cv::Point(-1, -1), 1);
+    cv::dilate(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(kernel_, kernel_)), cv::Point(-1, -1), 2);
+    cv::erode(image, image, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(kernel_, kernel_)), cv::Point(-1, -1), 1);
   }
 
   // Publish the converted image
